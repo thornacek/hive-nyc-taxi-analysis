@@ -1,0 +1,401 @@
+Last login: Tue Mar 31 13:23:44 on ttys000
+thomashornacek@Thomass-MacBook-Pro ~ % docker pull apache/hive:4.0.0
+4.0.0: Pulling from apache/hive
+4f4fb700ef54: Pull complete 
+acb32ec93a5d: Pull complete 
+f83c96cf43e9: Pull complete 
+09650b219558: Pull complete 
+b8efbde49f77: Pull complete 
+efd22504ff0a: Pull complete 
+04acb178ffe4: Pull complete 
+e9ed7de0daff: Pull complete 
+1efc276f4ff9: Pull complete 
+a2f2f93da482: Pull complete 
+1a2de4cc9431: Pull complete 
+d2421c7a4bbf: Pull complete 
+ec49bc66c13d: Pull complete 
+3003c0b0878e: Download complete 
+Digest: sha256:c0b241c544d341c16a6d8cafcb801a071be9b02054a5add255e9a0e826095e88
+Status: Downloaded newer image for apache/hive:4.0.0
+docker.io/apache/hive:4.0.0
+thomashornacek@Thomass-MacBook-Pro ~ % mkdir -p ~/hive-data
+cp ~/Downloads/yellow_tripdata_2015-01-06.csv ~/hive-data/
+docker run -d -p 10000:10000 -p 10002:10002 --env SERVICE_NAME=hiveserver2 --name hive4 -v ~/hive-data:/opt/hive/data/csv apache/hive:4.0.0
+15b3167f5e9c39d9a3753eba583c939d1fbe9c1085ac7a30543df0ad7b734475
+thomashornacek@Thomass-MacBook-Pro ~ % docker exec -it hive4 beeline -u 'jdbc:hive2://localhost:10000/'
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/opt/hive/lib/log4j-slf4j-impl-2.18.0.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/opt/hadoop/share/hadoop/common/lib/slf4j-reload4j-1.7.36.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/opt/hive/lib/log4j-slf4j-impl-2.18.0.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/opt/hadoop/share/hadoop/common/lib/slf4j-reload4j-1.7.36.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+Connecting to jdbc:hive2://localhost:10000/
+Connected to: Apache Hive (version 4.0.0)
+Driver: Hive JDBC (version 4.0.0)
+Transaction isolation: TRANSACTION_REPEATABLE_READ
+Beeline version 4.0.0 by Apache Hive
+0: jdbc:hive2://localhost:10000/> CREATE DATABASE IF NOT EXISTS taxi_analysis;
+INFO  : Compiling command(queryId=hive_20260331231454_1c2ece92-2ba0-45c6-8e09-d3a6d2e96667): CREATE DATABASE IF NOT EXISTS taxi_analysis
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Created Hive schema: Schema(fieldSchemas:null, properties:null)
+INFO  : Completed compiling command(queryId=hive_20260331231454_1c2ece92-2ba0-45c6-8e09-d3a6d2e96667); Time taken: 1.849 seconds
+INFO  : Concurrency mode is disabled, not creating a lock manager
+INFO  : Executing command(queryId=hive_20260331231454_1c2ece92-2ba0-45c6-8e09-d3a6d2e96667): CREATE DATABASE IF NOT EXISTS taxi_analysis
+INFO  : Starting task [Stage-0:DDL] in serial mode
+INFO  : Completed executing command(queryId=hive_20260331231454_1c2ece92-2ba0-45c6-8e09-d3a6d2e96667); Time taken: 0.075 seconds
+No rows affected (2.316 seconds)
+0: jdbc:hive2://localhost:10000/> USE taxi_analysis;
+INFO  : Compiling command(queryId=hive_20260331231506_955d5b06-c9bc-4849-9eed-7b089873c97a): USE taxi_analysis
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Created Hive schema: Schema(fieldSchemas:null, properties:null)
+INFO  : Completed compiling command(queryId=hive_20260331231506_955d5b06-c9bc-4849-9eed-7b089873c97a); Time taken: 0.019 seconds
+INFO  : Concurrency mode is disabled, not creating a lock manager
+INFO  : Executing command(queryId=hive_20260331231506_955d5b06-c9bc-4849-9eed-7b089873c97a): USE taxi_analysis
+INFO  : Starting task [Stage-0:DDL] in serial mode
+INFO  : Completed executing command(queryId=hive_20260331231506_955d5b06-c9bc-4849-9eed-7b089873c97a); Time taken: 0.014 seconds
+No rows affected (0.05 seconds)
+0: jdbc:hive2://localhost:10000/> CREATE TABLE IF NOT EXISTS taxidata (vendor_id STRING, pickup_datetime STRING, dropoff_datetime STRING, passenger_count INT, trip_distance DECIMAL(9,6), pickup_longitude DECIMAL(9,6), pickup_latitude DECIMAL(9,6), rate_code INT, store_and_fwd_flag STRING, dropoff_longitude DECIMAL(9,6), dropoff_latitude DECIMAL(9,6), payment_type STRING, fare_amount DECIMAL(9,6), extra DECIMAL(9,6), mta_tax DECIMAL(9,6), tip_amount DECIMAL(9,6), tolls_amount DECIMAL(9,6), total_amount DECIMAL(9,6), trip_time_in_secs INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE TBLPROPERTIES ("skip.header.line.count"="1");
+INFO  : Compiling command(queryId=hive_20260331231603_7297a62e-2d14-4c83-ab57-bc73e1a47439): CREATE TABLE IF NOT EXISTS taxidata (vendor_id STRING, pickup_datetime STRING, dropoff_datetime STRING, passenger_count INT, trip_distance DECIMAL(9,6), pickup_longitude DECIMAL(9,6), pickup_latitude DECIMAL(9,6), rate_code INT, store_and_fwd_flag STRING, dropoff_longitude DECIMAL(9,6), dropoff_latitude DECIMAL(9,6), payment_type STRING, fare_amount DECIMAL(9,6), extra DECIMAL(9,6), mta_tax DECIMAL(9,6), tip_amount DECIMAL(9,6), tolls_amount DECIMAL(9,6), total_amount DECIMAL(9,6), trip_time_in_secs INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE TBLPROPERTIES ("skip.header.line.count"="1")
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Created Hive schema: Schema(fieldSchemas:null, properties:null)
+INFO  : Completed compiling command(queryId=hive_20260331231603_7297a62e-2d14-4c83-ab57-bc73e1a47439); Time taken: 0.089 seconds
+INFO  : Concurrency mode is disabled, not creating a lock manager
+INFO  : Executing command(queryId=hive_20260331231603_7297a62e-2d14-4c83-ab57-bc73e1a47439): CREATE TABLE IF NOT EXISTS taxidata (vendor_id STRING, pickup_datetime STRING, dropoff_datetime STRING, passenger_count INT, trip_distance DECIMAL(9,6), pickup_longitude DECIMAL(9,6), pickup_latitude DECIMAL(9,6), rate_code INT, store_and_fwd_flag STRING, dropoff_longitude DECIMAL(9,6), dropoff_latitude DECIMAL(9,6), payment_type STRING, fare_amount DECIMAL(9,6), extra DECIMAL(9,6), mta_tax DECIMAL(9,6), tip_amount DECIMAL(9,6), tolls_amount DECIMAL(9,6), total_amount DECIMAL(9,6), trip_time_in_secs INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE TBLPROPERTIES ("skip.header.line.count"="1")
+INFO  : Starting task [Stage-0:DDL] in serial mode
+INFO  : Completed executing command(queryId=hive_20260331231603_7297a62e-2d14-4c83-ab57-bc73e1a47439); Time taken: 0.357 seconds
+No rows affected (0.462 seconds)
+0: jdbc:hive2://localhost:10000/> LOAD DATA LOCAL INPATH '/opt/hive/data/csv/yellow_tripdata_2015-01-06.csv' INTO TABLE taxidata;
+INFO  : Compiling command(queryId=hive_20260331231639_7a1edad7-6872-4570-a410-beed8bc66f77): LOAD DATA LOCAL INPATH '/opt/hive/data/csv/yellow_tripdata_2015-01-06.csv' INTO TABLE taxidata
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Created Hive schema: Schema(fieldSchemas:null, properties:null)
+INFO  : Completed compiling command(queryId=hive_20260331231639_7a1edad7-6872-4570-a410-beed8bc66f77); Time taken: 0.247 seconds
+INFO  : Concurrency mode is disabled, not creating a lock manager
+INFO  : Executing command(queryId=hive_20260331231639_7a1edad7-6872-4570-a410-beed8bc66f77): LOAD DATA LOCAL INPATH '/opt/hive/data/csv/yellow_tripdata_2015-01-06.csv' INTO TABLE taxidata
+INFO  : Starting task [Stage-0:MOVE] in serial mode
+INFO  : Loading data to table taxi_analysis.taxidata from file:/opt/hive/data/csv/yellow_tripdata_2015-01-06.csv
+INFO  : Starting task [Stage-1:STATS] in serial mode
+INFO  : Executing stats task
+INFO  : Table taxi_analysis.taxidata stats: [numFiles=1, numRows=0, totalSize=1512490, rawDataSize=0, numFilesErasureCoded=0]
+INFO  : Completed executing command(queryId=hive_20260331231639_7a1edad7-6872-4570-a410-beed8bc66f77); Time taken: 0.875 seconds
+No rows affected (1.142 seconds)
+0: jdbc:hive2://localhost:10000/> docker ps
+. . . . . . . . . . . . . . . . > [WARN] Failed to create directory: /home/hive/.beeline
+No such file or directory
+Closing: 0: jdbc:hive2://localhost:10000/
+thomashornacek@Thomass-MacBook-Pro ~ % USE taxi_analysis;
+zsh: command not found: USE
+thomashornacek@Thomass-MacBook-Pro ~ % docker exec -it hive4 beeline -u 'jdbc:hive2://localhost:10000/'
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/opt/hive/lib/log4j-slf4j-impl-2.18.0.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/opt/hadoop/share/hadoop/common/lib/slf4j-reload4j-1.7.36.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/opt/hive/lib/log4j-slf4j-impl-2.18.0.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/opt/hadoop/share/hadoop/common/lib/slf4j-reload4j-1.7.36.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+Connecting to jdbc:hive2://localhost:10000/
+Connected to: Apache Hive (version 4.0.0)
+Driver: Hive JDBC (version 4.0.0)
+Transaction isolation: TRANSACTION_REPEATABLE_READ
+Beeline version 4.0.0 by Apache Hive
+0: jdbc:hive2://localhost:10000/> USE taxi_analysis;
+INFO  : Compiling command(queryId=hive_20260401144507_6bc7fc8a-e187-48ce-b299-6e2d3b58144e): USE taxi_analysis
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Created Hive schema: Schema(fieldSchemas:null, properties:null)
+INFO  : Completed compiling command(queryId=hive_20260401144507_6bc7fc8a-e187-48ce-b299-6e2d3b58144e); Time taken: 0.132 seconds
+INFO  : Concurrency mode is disabled, not creating a lock manager
+INFO  : Executing command(queryId=hive_20260401144507_6bc7fc8a-e187-48ce-b299-6e2d3b58144e): USE taxi_analysis
+INFO  : Starting task [Stage-0:DDL] in serial mode
+INFO  : Completed executing command(queryId=hive_20260401144507_6bc7fc8a-e187-48ce-b299-6e2d3b58144e); Time taken: 0.028 seconds
+No rows affected (0.314 seconds)
+0: jdbc:hive2://localhost:10000/> SELECT COUNT(*) AS total_trips FROM taxidata;
+INFO  : Compiling command(queryId=hive_20260401144524_b14ec937-b9ed-4189-bde3-0faff608d975): SELECT COUNT(*) AS total_trips FROM taxidata
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Created Hive schema: Schema(fieldSchemas:[FieldSchema(name:total_trips, type:bigint, comment:null)], properties:null)
+INFO  : Completed compiling command(queryId=hive_20260401144524_b14ec937-b9ed-4189-bde3-0faff608d975); Time taken: 6.932 seconds
+INFO  : Concurrency mode is disabled, not creating a lock manager
+INFO  : Executing command(queryId=hive_20260401144524_b14ec937-b9ed-4189-bde3-0faff608d975): SELECT COUNT(*) AS total_trips FROM taxidata
+INFO  : Query ID = hive_20260401144524_b14ec937-b9ed-4189-bde3-0faff608d975
+INFO  : Total jobs = 1
+INFO  : Launching Job 1 out of 1
+INFO  : Starting task [Stage-1:MAPRED] in serial mode
+INFO  : Subscribed to counters: [] for queryId: hive_20260401144524_b14ec937-b9ed-4189-bde3-0faff608d975
+INFO  : Tez session hasn't been created yet. Opening session
+INFO  : Dag name: SELECT COUNT(*) AS total_trips FROM taxidata (Stage-1)
+INFO  : HS2 Host: [15b3167f5e9c], Query ID: [hive_20260401144524_b14ec937-b9ed-4189-bde3-0faff608d975], Dag ID: [dag_1775054734313_0001_1], DAG Session ID: [application_1775054734313_0001]
+INFO  : Status: Running (Executing on YARN cluster with App id application_1775054734313_0001)
+
+----------------------------------------------------------------------------------------------
+        VERTICES      MODE        STATUS  TOTAL  COMPLETED  RUNNING  PENDING  FAILED  KILLED  
+----------------------------------------------------------------------------------------------
+Map 1 .......... container     SUCCEEDED      1          1        0        0       0       0  
+Reducer 2 ...... container     SUCCEEDED      1          1        0        0       0       0  
+----------------------------------------------------------------------------------------------
+VERTICES: 02/02  [==========================>>] 100%  ELAPSED TIME: 3.28 s     
+----------------------------------------------------------------------------------------------
+INFO  : Completed executing command(queryId=hive_20260401144524_b14ec937-b9ed-4189-bde3-0faff608d975); Time taken: 9.057 seconds
++--------------+
+| total_trips  |
++--------------+
+| 10000        |
++--------------+
+1 row selected (16.184 seconds)
+0: jdbc:hive2://localhost:10000/> SELECT ROUND(SUM(total_amount), 2) AS total_revenue FROM taxidata;
+INFO  : Compiling command(queryId=hive_20260401144931_6bbae859-fcc4-4225-982b-861586998a94): SELECT ROUND(SUM(total_amount), 2) AS total_revenue FROM taxidata
+INFO  : No Stats for taxi_analysis@taxidata, Columns: total_amount
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Created Hive schema: Schema(fieldSchemas:[FieldSchema(name:total_revenue, type:decimal(16,2), comment:null)], properties:null)
+INFO  : Completed compiling command(queryId=hive_20260401144931_6bbae859-fcc4-4225-982b-861586998a94); Time taken: 0.358 seconds
+INFO  : Concurrency mode is disabled, not creating a lock manager
+INFO  : Executing command(queryId=hive_20260401144931_6bbae859-fcc4-4225-982b-861586998a94): SELECT ROUND(SUM(total_amount), 2) AS total_revenue FROM taxidata
+INFO  : Query ID = hive_20260401144931_6bbae859-fcc4-4225-982b-861586998a94
+INFO  : Total jobs = 1
+INFO  : Launching Job 1 out of 1
+INFO  : Starting task [Stage-1:MAPRED] in serial mode
+INFO  : Subscribed to counters: [] for queryId: hive_20260401144931_6bbae859-fcc4-4225-982b-861586998a94
+INFO  : Session is already open
+INFO  : Dag name: SELECT ROUND(SUM(tota......nue FROM taxidata (Stage-1)
+INFO  : HS2 Host: [15b3167f5e9c], Query ID: [hive_20260401144931_6bbae859-fcc4-4225-982b-861586998a94], Dag ID: [dag_1775054734313_0001_2], DAG Session ID: [application_1775054734313_0001]
+INFO  : Status: Running (Executing on YARN cluster with App id application_1775054734313_0001)
+
+----------------------------------------------------------------------------------------------
+        VERTICES      MODE        STATUS  TOTAL  COMPLETED  RUNNING  PENDING  FAILED  KILLED  
+----------------------------------------------------------------------------------------------
+Map 1 .......... container     SUCCEEDED      1          1        0        0       0       0  
+Reducer 2 ...... container     SUCCEEDED      1          1        0        0       0       0  
+----------------------------------------------------------------------------------------------
+VERTICES: 02/02  [==========================>>] 100%  ELAPSED TIME: 1.12 s     
+----------------------------------------------------------------------------------------------
+INFO  : Completed executing command(queryId=hive_20260401144931_6bbae859-fcc4-4225-982b-861586998a94); Time taken: 1.245 seconds
++----------------+
+| total_revenue  |
++----------------+
+| 160546.81      |
++----------------+
+1 row selected (1.651 seconds)
+0: jdbc:hive2://localhost:10000/> SELECT ROUND(SUM(tolls_amount), 2) AS total_tolls, ROUND(SUM(total_amount), 2) AS total_revenue, ROUND(SUM(tolls_amount) / SUM(total_amount) * 100, 2) AS toll_fraction_pct FROM taxidata;
+INFO  : Compiling command(queryId=hive_20260401145211_a09dd6ff-7550-4013-9c9c-61da1cb7d4ce): SELECT ROUND(SUM(tolls_amount), 2) AS total_tolls, ROUND(SUM(total_amount), 2) AS total_revenue, ROUND(SUM(tolls_amount) / SUM(total_amount) * 100, 2) AS toll_fraction_pct FROM taxidata
+INFO  : No Stats for taxi_analysis@taxidata, Columns: total_amount, tolls_amount
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Created Hive schema: Schema(fieldSchemas:[FieldSchema(name:total_tolls, type:decimal(16,2), comment:null), FieldSchema(name:total_revenue, type:decimal(16,2), comment:null), FieldSchema(name:toll_fraction_pct, type:decimal(26,2), comment:null)], properties:null)
+INFO  : Completed compiling command(queryId=hive_20260401145211_a09dd6ff-7550-4013-9c9c-61da1cb7d4ce); Time taken: 0.251 seconds
+INFO  : Concurrency mode is disabled, not creating a lock manager
+INFO  : Executing command(queryId=hive_20260401145211_a09dd6ff-7550-4013-9c9c-61da1cb7d4ce): SELECT ROUND(SUM(tolls_amount), 2) AS total_tolls, ROUND(SUM(total_amount), 2) AS total_revenue, ROUND(SUM(tolls_amount) / SUM(total_amount) * 100, 2) AS toll_fraction_pct FROM taxidata
+INFO  : Query ID = hive_20260401145211_a09dd6ff-7550-4013-9c9c-61da1cb7d4ce
+INFO  : Total jobs = 1
+INFO  : Launching Job 1 out of 1
+INFO  : Starting task [Stage-1:MAPRED] in serial mode
+INFO  : Subscribed to counters: [] for queryId: hive_20260401145211_a09dd6ff-7550-4013-9c9c-61da1cb7d4ce
+INFO  : Session is already open
+INFO  : Dag name: SELECT ROUND(SUM(toll......pct FROM taxidata (Stage-1)
+INFO  : HS2 Host: [15b3167f5e9c], Query ID: [hive_20260401145211_a09dd6ff-7550-4013-9c9c-61da1cb7d4ce], Dag ID: [dag_1775054734313_0001_3], DAG Session ID: [application_1775054734313_0001]
+INFO  : Status: Running (Executing on YARN cluster with App id application_1775054734313_0001)
+
+----------------------------------------------------------------------------------------------
+        VERTICES      MODE        STATUS  TOTAL  COMPLETED  RUNNING  PENDING  FAILED  KILLED  
+----------------------------------------------------------------------------------------------
+Map 1 .......... container     SUCCEEDED      1          1        0        0       0       0  
+Reducer 2 ...... container     SUCCEEDED      1          1        0        0       0       0  
+----------------------------------------------------------------------------------------------
+VERTICES: 02/02  [==========================>>] 100%  ELAPSED TIME: 0.99 s     
+----------------------------------------------------------------------------------------------
+INFO  : Completed executing command(queryId=hive_20260401145211_a09dd6ff-7550-4013-9c9c-61da1cb7d4ce); Time taken: 1.112 seconds
++--------------+----------------+--------------------+
+| total_tolls  | total_revenue  | toll_fraction_pct  |
++--------------+----------------+--------------------+
+| 2496.99      | 160546.81      | 1.56               |
++--------------+----------------+--------------------+
+1 row selected (1.395 seconds)
+0: jdbc:hive2://localhost:10000/> Select ROUND(SUM(tip_amount), 2)AS total_tips, ROUND(SUM(total_amount),2) AS total_revenue, ROUND(SUM(tip_amount)/SUM(total_amount)*100, 2) AS tip_fraction_pct FROM taxidata;
+INFO  : Compiling command(queryId=hive_20260401145645_7c61bdc6-afb8-4dc6-8493-aef4494db9da): Select ROUND(SUM(tip_amount), 2)AS total_tips, ROUND(SUM(total_amount),2) AS total_revenue, ROUND(SUM(tip_amount)/SUM(total_amount)*100, 2) AS tip_fraction_pct FROM taxidata
+INFO  : No Stats for taxi_analysis@taxidata, Columns: total_amount, tip_amount
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Created Hive schema: Schema(fieldSchemas:[FieldSchema(name:total_tips, type:decimal(16,2), comment:null), FieldSchema(name:total_revenue, type:decimal(16,2), comment:null), FieldSchema(name:tip_fraction_pct, type:decimal(26,2), comment:null)], properties:null)
+INFO  : Completed compiling command(queryId=hive_20260401145645_7c61bdc6-afb8-4dc6-8493-aef4494db9da); Time taken: 0.175 seconds
+INFO  : Concurrency mode is disabled, not creating a lock manager
+INFO  : Executing command(queryId=hive_20260401145645_7c61bdc6-afb8-4dc6-8493-aef4494db9da): Select ROUND(SUM(tip_amount), 2)AS total_tips, ROUND(SUM(total_amount),2) AS total_revenue, ROUND(SUM(tip_amount)/SUM(total_amount)*100, 2) AS tip_fraction_pct FROM taxidata
+INFO  : Query ID = hive_20260401145645_7c61bdc6-afb8-4dc6-8493-aef4494db9da
+INFO  : Total jobs = 1
+INFO  : Launching Job 1 out of 1
+INFO  : Starting task [Stage-1:MAPRED] in serial mode
+INFO  : Subscribed to counters: [] for queryId: hive_20260401145645_7c61bdc6-afb8-4dc6-8493-aef4494db9da
+INFO  : Session is already open
+INFO  : Dag name: Select ROUND(SUM(tip_......pct FROM taxidata (Stage-1)
+INFO  : HS2 Host: [15b3167f5e9c], Query ID: [hive_20260401145645_7c61bdc6-afb8-4dc6-8493-aef4494db9da], Dag ID: [dag_1775054734313_0001_4], DAG Session ID: [application_1775054734313_0001]
+INFO  : Status: Running (Executing on YARN cluster with App id application_1775054734313_0001)
+
+INFO  : Completed executing command(queryId=hive_20260401145645_7c61bdc6-afb8-4dc6-8493-aef4494db9da); Time taken: 0.923 seconds
++-------------+----------------+-------------------+
+| total_tips  | total_revenue  | tip_fraction_pct  |
++-------------+----------------+-------------------+
+| 17315.30    | 160546.81      | 10.79             |
++-------------+----------------+-------------------+
+1 row selected (1.118 seconds)
+0: jdbc:hive2://localhost:10000/> SELECT ROUND(AVG(total_amount), 2) AS avg_trip_amount FROM taxidata:
+. . . . . . . . . . . . . . . . > ;
+Error: Error while compiling statement: FAILED: ParseException line 1:67 cannot recognize input near 'taxidata' ':' '<EOF>' in joinSource (state=42000,code=40000)
+0: jdbc:hive2://localhost:10000/> SELECT ROUND(AVG(trip_distance), 2) AS avg_trip_distance FROM taxidata;
+INFO  : Compiling command(queryId=hive_20260401150035_5ee91b3a-f0ee-44fe-ae39-6b0bfde4cfc2): SELECT ROUND(AVG(trip_distance), 2) AS avg_trip_distance FROM taxidata
+INFO  : No Stats for taxi_analysis@taxidata, Columns: trip_distance
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Created Hive schema: Schema(fieldSchemas:[FieldSchema(name:avg_trip_distance, type:decimal(6,2), comment:null)], properties:null)
+INFO  : Completed compiling command(queryId=hive_20260401150035_5ee91b3a-f0ee-44fe-ae39-6b0bfde4cfc2); Time taken: 0.164 seconds
+INFO  : Concurrency mode is disabled, not creating a lock manager
+INFO  : Executing command(queryId=hive_20260401150035_5ee91b3a-f0ee-44fe-ae39-6b0bfde4cfc2): SELECT ROUND(AVG(trip_distance), 2) AS avg_trip_distance FROM taxidata
+INFO  : Query ID = hive_20260401150035_5ee91b3a-f0ee-44fe-ae39-6b0bfde4cfc2
+INFO  : Total jobs = 1
+INFO  : Launching Job 1 out of 1
+INFO  : Starting task [Stage-1:MAPRED] in serial mode
+INFO  : Subscribed to counters: [] for queryId: hive_20260401150035_5ee91b3a-f0ee-44fe-ae39-6b0bfde4cfc2
+INFO  : Session is already open
+INFO  : Dag name: SELECT ROUND(AVG(trip......nce FROM taxidata (Stage-1)
+INFO  : HS2 Host: [15b3167f5e9c], Query ID: [hive_20260401150035_5ee91b3a-f0ee-44fe-ae39-6b0bfde4cfc2], Dag ID: [dag_1775054734313_0001_5], DAG Session ID: [application_1775054734313_0001]
+INFO  : Status: Running (Executing on YARN cluster with App id application_1775054734313_0001)
+
+INFO  : Completed executing command(queryId=hive_20260401150035_5ee91b3a-f0ee-44fe-ae39-6b0bfde4cfc2); Time taken: 0.906 seconds
++--------------------+
+| avg_trip_distance  |
++--------------------+
+| 3.25               |
++--------------------+
+1 row selected (1.089 seconds)
+0: jdbc:hive2://localhost:10000/> SELECT COUNT(DISTINCT payment_type) AS distinct_payment_types FROM taxidata 
+. . . . . . . . . . . . . . . . > ;
+INFO  : Compiling command(queryId=hive_20260401150155_c16e1031-1572-48e0-b96b-d9013aad3d6a): SELECT COUNT(DISTINCT payment_type) AS distinct_payment_types FROM taxidata
+INFO  : No Stats for taxi_analysis@taxidata, Columns: payment_type
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Created Hive schema: Schema(fieldSchemas:[FieldSchema(name:distinct_payment_types, type:bigint, comment:null)], properties:null)
+INFO  : Completed compiling command(queryId=hive_20260401150155_c16e1031-1572-48e0-b96b-d9013aad3d6a); Time taken: 0.233 seconds
+INFO  : Concurrency mode is disabled, not creating a lock manager
+INFO  : Executing command(queryId=hive_20260401150155_c16e1031-1572-48e0-b96b-d9013aad3d6a): SELECT COUNT(DISTINCT payment_type) AS distinct_payment_types FROM taxidata
+INFO  : Query ID = hive_20260401150155_c16e1031-1572-48e0-b96b-d9013aad3d6a
+INFO  : Total jobs = 1
+INFO  : Launching Job 1 out of 1
+INFO  : Starting task [Stage-1:MAPRED] in serial mode
+INFO  : Subscribed to counters: [] for queryId: hive_20260401150155_c16e1031-1572-48e0-b96b-d9013aad3d6a
+INFO  : Session is already open
+INFO  : Dag name: SELECT COUNT(DISTINCT......pes FROM taxidata (Stage-1)
+INFO  : HS2 Host: [15b3167f5e9c], Query ID: [hive_20260401150155_c16e1031-1572-48e0-b96b-d9013aad3d6a], Dag ID: [dag_1775054734313_0001_6], DAG Session ID: [application_1775054734313_0001]
+INFO  : Status: Running (Executing on YARN cluster with App id application_1775054734313_0001)
+
+----------------------------------------------------------------------------------------------
+        VERTICES      MODE        STATUS  TOTAL  COMPLETED  RUNNING  PENDING  FAILED  KILLED  
+----------------------------------------------------------------------------------------------
+Map 1 .......... container     SUCCEEDED      1          1        0        0       0       0  
+Reducer 2 ...... container     SUCCEEDED      1          1        0        0       0       0  
+Reducer 3 ...... container     SUCCEEDED      1          1        0        0       0       0  
+----------------------------------------------------------------------------------------------
+VERTICES: 03/03  [==========================>>] 100%  ELAPSED TIME: 1.37 s     
+----------------------------------------------------------------------------------------------
+INFO  : Completed executing command(queryId=hive_20260401150155_c16e1031-1572-48e0-b96b-d9013aad3d6a); Time taken: 1.54 seconds
++-------------------------+
+| distinct_payment_types  |
++-------------------------+
+| 4                       |
++-------------------------+
+1 row selected (1.795 seconds)
+0: jdbc:hive2://localhost:10000/> SELECT ROUND(AVG(total_amount), 2) AS avg_trip_amount FROM taxidata;
+INFO  : Compiling command(queryId=hive_20260401150456_9a3ab81c-d51b-482a-996e-32fec6c23847): SELECT ROUND(AVG(total_amount), 2) AS avg_trip_amount FROM taxidata
+INFO  : No Stats for taxi_analysis@taxidata, Columns: total_amount
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Created Hive schema: Schema(fieldSchemas:[FieldSchema(name:avg_trip_amount, type:decimal(6,2), comment:null)], properties:null)
+INFO  : Completed compiling command(queryId=hive_20260401150456_9a3ab81c-d51b-482a-996e-32fec6c23847); Time taken: 0.146 seconds
+INFO  : Concurrency mode is disabled, not creating a lock manager
+INFO  : Executing command(queryId=hive_20260401150456_9a3ab81c-d51b-482a-996e-32fec6c23847): SELECT ROUND(AVG(total_amount), 2) AS avg_trip_amount FROM taxidata
+INFO  : Query ID = hive_20260401150456_9a3ab81c-d51b-482a-996e-32fec6c23847
+INFO  : Total jobs = 1
+INFO  : Launching Job 1 out of 1
+INFO  : Starting task [Stage-1:MAPRED] in serial mode
+INFO  : Subscribed to counters: [] for queryId: hive_20260401150456_9a3ab81c-d51b-482a-996e-32fec6c23847
+INFO  : Session is already open
+INFO  : Dag name: SELECT ROUND(AVG(tota......unt FROM taxidata (Stage-1)
+INFO  : HS2 Host: [15b3167f5e9c], Query ID: [hive_20260401150456_9a3ab81c-d51b-482a-996e-32fec6c23847], Dag ID: [dag_1775054734313_0001_7], DAG Session ID: [application_1775054734313_0001]
+INFO  : Status: Running (Executing on YARN cluster with App id application_1775054734313_0001)
+
+INFO  : Completed executing command(queryId=hive_20260401150456_9a3ab81c-d51b-482a-996e-32fec6c23847); Time taken: 0.89 seconds
++------------------+
+| avg_trip_amount  |
++------------------+
+| 16.05            |
++------------------+
+1 row selected (1.056 seconds)
+0: jdbc:hive2://localhost:10000/> SELECT payment_type, ROUND(AVG(fare_amount), 2) AS avg_fare, ROUND(AVG(tip_amount), 2) AS avg_tip, ROUND(AVG(mta_tax), 2) AS avg_tax FROM taxidata GROUP BY payment_type Order BY payment_type;
+INFO  : Compiling command(queryId=hive_20260401150821_17ebc089-f1db-43f3-91a3-dd9f0e2c8115): SELECT payment_type, ROUND(AVG(fare_amount), 2) AS avg_fare, ROUND(AVG(tip_amount), 2) AS avg_tip, ROUND(AVG(mta_tax), 2) AS avg_tax FROM taxidata GROUP BY payment_type Order BY payment_type
+INFO  : No Stats for taxi_analysis@taxidata, Columns: payment_type, fare_amount, tip_amount, mta_tax
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Created Hive schema: Schema(fieldSchemas:[FieldSchema(name:payment_type, type:string, comment:null), FieldSchema(name:avg_fare, type:decimal(6,2), comment:null), FieldSchema(name:avg_tip, type:decimal(6,2), comment:null), FieldSchema(name:avg_tax, type:decimal(6,2), comment:null)], properties:null)
+INFO  : Completed compiling command(queryId=hive_20260401150821_17ebc089-f1db-43f3-91a3-dd9f0e2c8115); Time taken: 0.303 seconds
+INFO  : Concurrency mode is disabled, not creating a lock manager
+INFO  : Executing command(queryId=hive_20260401150821_17ebc089-f1db-43f3-91a3-dd9f0e2c8115): SELECT payment_type, ROUND(AVG(fare_amount), 2) AS avg_fare, ROUND(AVG(tip_amount), 2) AS avg_tip, ROUND(AVG(mta_tax), 2) AS avg_tax FROM taxidata GROUP BY payment_type Order BY payment_type
+INFO  : Query ID = hive_20260401150821_17ebc089-f1db-43f3-91a3-dd9f0e2c8115
+INFO  : Total jobs = 1
+INFO  : Launching Job 1 out of 1
+INFO  : Starting task [Stage-1:MAPRED] in serial mode
+INFO  : Subscribed to counters: [] for queryId: hive_20260401150821_17ebc089-f1db-43f3-91a3-dd9f0e2c8115
+INFO  : Session is already open
+INFO  : Dag name: SELECT payment_type, ......r BY payment_type (Stage-1)
+INFO  : HS2 Host: [15b3167f5e9c], Query ID: [hive_20260401150821_17ebc089-f1db-43f3-91a3-dd9f0e2c8115], Dag ID: [dag_1775054734313_0001_8], DAG Session ID: [application_1775054734313_0001]
+INFO  : Status: Running (Executing on YARN cluster with App id application_1775054734313_0001)
+
+----------------------------------------------------------------------------------------------
+        VERTICES      MODE        STATUS  TOTAL  COMPLETED  RUNNING  PENDING  FAILED  KILLED  
+----------------------------------------------------------------------------------------------
+Map 1 .......... container     SUCCEEDED      1          1        0        0       0       0  
+Reducer 2 ...... container     SUCCEEDED      1          1        0        0       0       0  
+Reducer 3 ...... container     SUCCEEDED      1          1        0        0       0       0  
+----------------------------------------------------------------------------------------------
+VERTICES: 03/03  [==========================>>] 100%  ELAPSED TIME: 1.30 s     
+----------------------------------------------------------------------------------------------
+INFO  : Completed executing command(queryId=hive_20260401150821_17ebc089-f1db-43f3-91a3-dd9f0e2c8115); Time taken: 1.402 seconds
++---------------+-----------+----------+----------+
+| payment_type  | avg_fare  | avg_tip  | avg_tax  |
++---------------+-----------+----------+----------+
+| 1             | 13.56     | 2.70     | 0.50     |
+| 2             | 11.39     | 0.00     | 0.50     |
+| 3             | 13.21     | 0.00     | 0.42     |
+| 4             | 12.22     | 0.00     | 0.50     |
++---------------+-----------+----------+----------+
+4 rows selected (1.731 seconds)
+0: jdbc:hive2://localhost:10000/> SELECT HOUR(pickup_datetime) AS pickup_hour, ROUND(AVG(total_amount),2) AS avg_revenue FROM taxidata GROUP BY HOUR (pickup_datetime) ORDER BY avg_revenue DESC;
+INFO  : Compiling command(queryId=hive_20260401151223_9be2c1c8-03d6-4edd-84ed-0640b274fa09): SELECT HOUR(pickup_datetime) AS pickup_hour, ROUND(AVG(total_amount),2) AS avg_revenue FROM taxidata GROUP BY HOUR (pickup_datetime) ORDER BY avg_revenue DESC
+INFO  : No Stats for taxi_analysis@taxidata, Columns: total_amount, pickup_datetime
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Created Hive schema: Schema(fieldSchemas:[FieldSchema(name:pickup_hour, type:int, comment:null), FieldSchema(name:avg_revenue, type:decimal(6,2), comment:null)], properties:null)
+INFO  : Completed compiling command(queryId=hive_20260401151223_9be2c1c8-03d6-4edd-84ed-0640b274fa09); Time taken: 0.211 seconds
+INFO  : Concurrency mode is disabled, not creating a lock manager
+INFO  : Executing command(queryId=hive_20260401151223_9be2c1c8-03d6-4edd-84ed-0640b274fa09): SELECT HOUR(pickup_datetime) AS pickup_hour, ROUND(AVG(total_amount),2) AS avg_revenue FROM taxidata GROUP BY HOUR (pickup_datetime) ORDER BY avg_revenue DESC
+INFO  : Query ID = hive_20260401151223_9be2c1c8-03d6-4edd-84ed-0640b274fa09
+INFO  : Total jobs = 1
+INFO  : Launching Job 1 out of 1
+INFO  : Starting task [Stage-1:MAPRED] in serial mode
+INFO  : Subscribed to counters: [] for queryId: hive_20260401151223_9be2c1c8-03d6-4edd-84ed-0640b274fa09
+INFO  : Session is already open
+INFO  : Dag name: SELECT HOUR(pickup_da...... avg_revenue DESC (Stage-1)
+INFO  : HS2 Host: [15b3167f5e9c], Query ID: [hive_20260401151223_9be2c1c8-03d6-4edd-84ed-0640b274fa09], Dag ID: [dag_1775054734313_0001_9], DAG Session ID: [application_1775054734313_0001]
+INFO  : Status: Running (Executing on YARN cluster with App id application_1775054734313_0001)
+
+----------------------------------------------------------------------------------------------
+        VERTICES      MODE        STATUS  TOTAL  COMPLETED  RUNNING  PENDING  FAILED  KILLED  
+----------------------------------------------------------------------------------------------
+Map 1 .......... container     SUCCEEDED      1          1        0        0       0       0  
+Reducer 2 ...... container     SUCCEEDED      1          1        0        0       0       0  
+Reducer 3 ...... container     SUCCEEDED      1          1        0        0       0       0  
+----------------------------------------------------------------------------------------------
+VERTICES: 03/03  [==========================>>] 100%  ELAPSED TIME: 1.37 s     
+----------------------------------------------------------------------------------------------
+INFO  : Completed executing command(queryId=hive_20260401151223_9be2c1c8-03d6-4edd-84ed-0640b274fa09); Time taken: 1.513 seconds
++--------------+--------------+
+| pickup_hour  | avg_revenue  |
++--------------+--------------+
+| 22           | 16.24        |
+| 23           | 16.11        |
+| 0            | 15.32        |
++--------------+--------------+
+3 rows selected (1.757 seconds)
+0: jdbc:hive2://localhost:10000/> 
